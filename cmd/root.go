@@ -1,7 +1,13 @@
 // Package cmd contains cobra commands of gh xk6.
 package cmd
 
-import "github.com/spf13/cobra"
+import (
+	"context"
+
+	"github.com/grafana/gh-xk6/cmd/catalog"
+	"github.com/grafana/gh-xk6/cmd/ghext"
+	"github.com/spf13/cobra"
+)
 
 var version = "dev"
 
@@ -19,6 +25,8 @@ func New() *cobra.Command {
 		CompletionOptions: cobra.CompletionOptions{HiddenDefaultCmd: true},
 	}
 
+	root.SetContext(ghext.Context(context.TODO()))
+
 	root.SetVersionTemplate(`gh-xk6 {{printf "version %s" .Version}}
 `)
 
@@ -26,7 +34,7 @@ func New() *cobra.Command {
 
 	flags.BoolP("version", "V", false, "version for gh xk6")
 
-	root.AddCommand(catalogCmd())
+	root.AddCommand(catalog.New())
 
 	return root
 }
