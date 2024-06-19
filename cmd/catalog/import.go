@@ -16,10 +16,8 @@ import (
 )
 
 var presets = map[string]string{ //nolint:gochecknoglobals
-	"official":   "[?contains(tiers,'Official')]",
-	"cloud":      "[?cloudEnabled == true]",
-	"javascript": "[?contains(type,'JavaScript')]",
-	"output":     "[?contains(type,'Output')]",
+	"official": "[?contains(tiers,'Official')]",
+	"cloud":    "[?cloudEnabled == true]",
 }
 
 var errUnknownPreset = errors.New("unknown preset")
@@ -102,9 +100,15 @@ func importCmd() *cobra.Command {
 
 	flags.BoolP("help", "h", false, "Help for "+cmd.Use+"command")
 	flags.VarP(&opts.filter, "filter", "q", "JMESPath query for filtering registry entries")
-	flags.VarP(&opts.preset, "preset", "p", "Select a preset JMESPath filter by name")
 	flags.StringVarP(&opts.filename, "file", "f", "k6catalog.json", "Extension catalog filename")
 	flags.BoolVar(&opts.force, "force", false, "Force overwriting of the existing file")
+
+	names := make([]string, 0, len(presets))
+	for name := range presets {
+		names = append(names, name)
+	}
+
+	flags.VarP(&opts.preset, "preset", "p", "Select a preset JMESPath filter by name ("+strings.Join(names, "|")+")")
 
 	cmd.MarkFlagsMutuallyExclusive("filter", "preset")
 
