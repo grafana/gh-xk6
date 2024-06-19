@@ -71,6 +71,8 @@ func updateVersions(ctx context.Context, mods catalogModules) error {
 			repo = parts[2]
 		}
 
+		mod.Versions = nil
+
 		tags, _, err := client.Repositories.ListTags(
 			ctx,
 			owner,
