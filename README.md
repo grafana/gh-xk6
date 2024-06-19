@@ -91,7 +91,7 @@ gh xk6 catalog import [flags]
   -q, --filter query   JMESPath query for filtering registry entries
       --force          Force overwriting of the existing file
   -h, --help           Help for importcommand
-  -p, --preset name    Select a preset JMESPath filter by name
+  -p, --preset name    Select a preset JMESPath filter by name (official|cloud)
 ```
 
 ### SEE ALSO
