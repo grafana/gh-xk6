@@ -29,7 +29,7 @@ func createCmd() *cobra.Command {
 	flags := cmd.Flags()
 
 	flags.BoolP("help", "h", false, "Help for "+cmd.Use+"command")
-	flags.StringVarP(&opts.filename, "file", "f", "k6catalog.json", "Extension catalog filename")
+	flags.StringVarP(&opts.filename, "file", "f", defaultFilename, "Extension catalog filename")
 	flags.BoolVar(&opts.force, "force", false, "Force overwriting of the existing file")
 
 	return cmd

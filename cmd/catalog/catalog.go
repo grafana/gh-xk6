@@ -133,4 +133,7 @@ func (reg *extensionRegistry) toModules() catalogModules {
 	return mods
 }
 
-const k6ModulePath = "go.k6.io/k6"
+const (
+	k6ModulePath    = "go.k6.io/k6"
+	defaultFilename = "k6catalog.json"
+)

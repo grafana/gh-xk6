@@ -100,7 +100,7 @@ func importCmd() *cobra.Command {
 
 	flags.BoolP("help", "h", false, "Help for "+cmd.Use+"command")
 	flags.VarP(&opts.filter, "filter", "q", "JMESPath query for filtering registry entries")
-	flags.StringVarP(&opts.filename, "file", "f", "k6catalog.json", "Extension catalog filename")
+	flags.StringVarP(&opts.filename, "file", "f", defaultFilename, "Extension catalog filename")
 	flags.BoolVar(&opts.force, "force", false, "Force overwriting of the existing file")
 
 	names := make([]string, 0, len(presets))
