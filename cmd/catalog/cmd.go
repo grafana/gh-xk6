@@ -12,7 +12,7 @@ func New() *cobra.Command {
 		Long:  "Maintain k6 extension catalog based on GitHub search",
 	}
 
-	cmd.AddCommand(createCmd(), importCmd(), updateCmd())
+	cmd.AddCommand(createCmd(), importCmd(), updateCmd(), conventionCmd())
 
 	return cmd
 }
