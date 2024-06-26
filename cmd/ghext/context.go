@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/cli/go-gh/v2/pkg/api"
 	"github.com/cli/go-gh/v2/pkg/auth"
@@ -71,6 +72,7 @@ func newHTTPClient() (*http.Client, error) {
 	}
 
 	opts.EnableCache = true
+	opts.CacheTTL = 2 * time.Hour
 
 	return api.NewHTTPClient(opts)
 }
