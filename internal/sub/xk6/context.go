@@ -1,4 +1,4 @@
-package ghext
+package xk6
 
 import (
 	"context"
@@ -18,7 +18,12 @@ type httpClientKey struct{}
 
 type githubClientKey struct{}
 
-var errInvalidContext = errors.New("invalid context")
+var (
+	errInvalidContext = errors.New("invalid context")
+	errMissingToken   = errors.New("missing authentication token")
+)
+
+const cacheTTL = 2 * time.Hour
 
 // ContextHTTPClient returns a *http.Client from context.
 func ContextHTTPClient(ctx context.Context) *http.Client {
@@ -30,6 +35,7 @@ func ContextHTTPClient(ctx context.Context) *http.Client {
 	}
 
 	cobra.CheckErr(errInvalidContext)
+
 	return nil
 }
 
@@ -43,6 +49,7 @@ func ContextGitHubClient(ctx context.Context) *github.Client {
 	}
 
 	cobra.CheckErr(errInvalidContext)
+
 	return nil
 }
 
@@ -54,7 +61,11 @@ func Context(ctx context.Context) context.Context {
 
 	ctx = context.WithValue(ctx, httpClientKey{}, htc)
 
-	return context.WithValue(ctx, githubClientKey{}, github.NewClient(htc))
+	return context.WithValue(ctx, githubClientKey{}, newGitHubClient(htc))
+}
+
+func newGitHubClient(client *http.Client) *github.Client {
+	return github.NewClient(client)
 }
 
 func newHTTPClient() (*http.Client, error) {
@@ -64,7 +75,7 @@ func newHTTPClient() (*http.Client, error) {
 
 	opts.AuthToken, _ = auth.TokenForHost(opts.Host)
 	if opts.AuthToken == "" {
-		return nil, fmt.Errorf("authentication token not found for host %s", opts.Host)
+		return nil, fmt.Errorf("%wfor host %s", errMissingToken, opts.Host)
 	}
 
 	if cfg, _ := config.Read(nil); cfg != nil {
@@ -72,7 +83,7 @@ func newHTTPClient() (*http.Client, error) {
 	}
 
 	opts.EnableCache = true
-	opts.CacheTTL = 2 * time.Hour
+	opts.CacheTTL = cacheTTL
 
 	return api.NewHTTPClient(opts)
 }

@@ -2,13 +2,10 @@
 package main
 
 import (
-	_ "embed"
-
-	"github.com/grafana/clireadme"
-	"github.com/grafana/gh-xk6/cmd"
+	"github.com/grafana/xk6/internal/sub/xk6"
+	"github.com/grafana/xk6/tools/clireadme"
 )
 
 func main() {
-	root := cmd.New()
-	clireadme.Main(root, 1)
+	clireadme.Main(xk6.New(), 1)
 }

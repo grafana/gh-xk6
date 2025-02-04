@@ -1,3 +1,4 @@
+project_name: xk6
 version: 2
 
 before:
@@ -5,42 +6,51 @@ before:
     - go mod tidy
     - go run ./tools/gendoc README.md
 
-gomod:
-  proxy: true
-  env:
-    - GOPROXY=https://proxy.golang.org,direct
-    - GOSUMDB=sum.golang.org
-    - GOPRIVATE=github.com/grafana/gh-xk6
-  mod: mod
-
 builds:
-  - env:
-      - CGO_ENABLED=0
-    flags:
-      - -tags=nodbus
-    goos:
-      - linux
-      - windows
-      - darwin
-    goarch:
-      - amd64
-      - arm64
-    ldflags:
-      - -s -w
-      - -X github.com/grafana/gh-xk6/cmd.version={{.Version}}
+  - id: xk6
+    main: ./cmd/xk6
+    binary: xk6
+    goos: ["linux", "windows"]
+    goarch: ["amd64", "arm64"]
+    ldflags: "-s -w -X github.com/grafana/xk6/internal/cli.version={{.Version}}"
+    env: ["CGO_ENABLED=0"]
+  - id: gh-xk6
+    main: ./cmd/gh-xk6
+    binary: gh-xk6
+    goos: ["linux", "windows"]
+    goarch: ["amd64", "arm64"]
+    ldflags: "-s -w -X github.com/grafana/xk6/internal/cli.version={{.Version}}"
+    env: ["CGO_ENABLED=0"]
+
+source:
+  enabled: true
+  name_template: "{{ .ProjectName }}_{{ .Version }}_source"
 
 archives:
-  - format: binary
+  - id: binary
+    builds: ["gh-xk6"]
+    formats: ["binary"]
     name_template: "gh-xk6_{{ .Tag }}_{{ .Os }}-{{ .Arch }}{{if .Arm}}_{{.Arm}}{{end}}"
+  - id: bundle
+    builds: ["xk6"]
+    formats: ["tar.gz"]
+    format_overrides:
+      - goos: windows
+        formats: ["zip"]
+
 checksum:
-  name_template: "checksums.txt"
+  name_template: "{{ .ProjectName }}_{{ .Version }}_checksums.txt"
+
 snapshot:
-  name_template: "{{ incpatch .Version }}-next"
+  version_template: "{{ incpatch .Version }}-next+{{.ShortCommit}}{{if .IsGitDirty}}.dirty{{else}}{{end}}"
+
 changelog:
   sort: asc
+  abbrev: -1
   filters:
-    include:
-      - "^feat:"
-      - "^fix:"
-      - "^refactor:"
-
+    exclude:
+      - "^chore:"
+      - "^docs:"
+      - "^test:"
+      - "^ci:"
+      - "^build:"

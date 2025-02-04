@@ -1,0 +1,24 @@
+{
+  "name": "gh-xk6",
+  "image": "mcr.microsoft.com/devcontainers/base:1-bookworm",
+
+  "features": {
+    "ghcr.io/devcontainers/features/github-cli:1": {},
+    "ghcr.io/devcontainers-extra/features/eget:1": {},
+    "ghcr.io/devcontainers/features/go:1": { "version": "1.23", "golangciLintVersion": "1.63.4" },
+    "ghcr.io/guiyomh/features/goreleaser:0": { "version": "2.6.1" },
+    "ghcr.io/guiyomh/features/gotestsum:0": {},
+    "ghcr.io/michidk/devcontainers-features/bun:1": {},
+    "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {}
+  },
+
+  "postCreateCommand": {
+    "cdo": "eget --to=$HOME/.local/bin/cdo szkiba/cdo",
+    "mdcode": "eget --to=$HOME/.local/bin/mdcode szkiba/mdcode"
+  },
+
+  "remoteEnv": {
+    "GH_TOKEN": "${localEnv:GH_TOKEN}",
+    "GITHUB_TOKEN": "${localEnv:GITHUB_TOKEN}"
+  }
+}
