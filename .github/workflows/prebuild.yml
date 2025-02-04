@@ -28,5 +28,4 @@ jobs:
         uses: devcontainers/ci@v0.3
         with:
           imageName: ghcr.io/grafana/gh-xk6-devcontainer
-          cacheFrom: ghcr.io/grafana/gh-xk6-devcontainer
           push: always
