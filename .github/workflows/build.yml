@@ -1,0 +1,22 @@
+name: build
+on:
+  workflow_dispatch:
+  push:
+    paths-ignore:
+      - ".devcontainers/**"
+      - ".github/workflows/prebuild.yml"
+
+jobs:
+  build:
+    name: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run make ci-build in dev container
+        uses: devcontainers/ci@v0.3
+        with:
+          cacheFrom: ghcr.io/grafana/gh-xk6-devcontainer
+          push: never
+          runCmd: go build .
