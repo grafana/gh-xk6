@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - ".devcontainers/**"
+      - ".github/workflows/prebuild.yml"
 
 jobs:
   prebuild:
