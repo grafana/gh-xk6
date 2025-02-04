@@ -2,8 +2,6 @@ name: prebuild
 on:
   workflow_dispatch:
   push:
-    paths:
-      - ".devcontainers/**"
 
 jobs:
   prebuild:
