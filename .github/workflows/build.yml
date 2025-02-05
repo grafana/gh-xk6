@@ -17,9 +17,16 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Run in dev container
-        uses: devcontainers/ci@v0.3
-        with:
-          imageName: ghcr.io/grafana/gh-xk6-devcontainer
-          runCmd: |
-            goreleaser build --clean --snapshot --single-target
+      - name: Install devcontainer CLI
+        run: npm install -g @devcontainers/cli@0
+
+      - name: Run devcontainer build
+        run: |
+          devcontainer build --workspace-folder ${{github.workspace}} --image-name ghcr.io/grafana/gh-xk6-devcontainer:latest --cache-from ghcr.io/grafana/gh-xk6-devcontainer:latest
+
+#      - name: Run in dev container
+#        uses: devcontainers/ci@v0.3
+#        with:
+#          imageName: ghcr.io/grafana/gh-xk6-devcontainer
+#          runCmd: |
+#            goreleaser build --clean --snapshot --single-target
