@@ -21,4 +21,5 @@ jobs:
         uses: devcontainers/ci@v0.3
         with:
           imageName: ghcr.io/grafana/gh-xk6-devcontainer
-          runCmd: go build .
+          runCmd: |
+            goreleaser build --clean --snapshot --single-target
