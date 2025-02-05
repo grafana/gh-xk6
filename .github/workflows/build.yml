@@ -25,7 +25,7 @@ jobs:
 
       - name: Run devcontainer build
         run: |
-          devcontainer build --workspace-folder ${{github.workspace}} --image-name ghcr.io/grafana/gh-xk6-devcontainer:latest --cache-from ghcr.io/grafana/gh-xk6-devcontainer:latest
+          devcontainer build --workspace-folder ${{github.workspace}} --cache-from ghcr.io/grafana/gh-xk6-devcontainer:latest
 
 #      - name: Run in dev container
 #        uses: devcontainers/ci@v0.3
