@@ -1,10 +1,6 @@
 name: build
 on:
-  workflow_dispatch:
   push:
-    paths-ignore:
-      - ".devcontainers/**"
-      - ".github/workflows/prebuild.yml"
 
 jobs:
   build:
@@ -14,9 +10,15 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Run make ci-build in dev container
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Run in dev container
         uses: devcontainers/ci@v0.3
         with:
           imageName: ghcr.io/grafana/gh-xk6-devcontainer
-          push: never
           runCmd: go build .
