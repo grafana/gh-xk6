@@ -1,0 +1,55 @@
+name: Release
+
+on:
+  schedule:
+    - cron: "0 0 * * *" # Every day at midnight
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version to release"
+        default: "latest"
+
+permissions: {}
+
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Setup Go ${{ vars.GO_VERSION }}
+        uses: actions/setup-go@v5
+        with:
+          go-version: ${{ vars.GO_VERSION }}
+          cache: false
+
+      - name: Setup GoReleaser
+        uses: goreleaser/goreleaser-action@9c156ee8a17a598857849441385a2041ef570552 # v6.3.0
+        with:
+          install-only: true
+          version: ${{ vars.GORELEASER_VERSION }}
+
+      - name: Build
+        id: build
+        shell: bash
+        env:
+          TAG: ${{ inputs.version }}
+          GH_TOKEN: ${{ github.token }}
+        run: ./build.sh $TAG
+
+      - name: Create Release
+        uses: softprops/action-gh-release@da05d552573ad5aba039eaac05058a918a7bf631 # v2.2.2
+        if: ${{ steps.build.outputs.tag != '' }}
+        with:
+          name: ${{ steps.build.outputs.tag }}
+          tag_name: ${{ steps.build.outputs.tag }}
+          files: build/xk6/dist/gh-xk6/*
+          fail_on_unmatched_files: true
+          body: |
+            Automatically generated release from corresponding [grafana/xk6](https://github.com/grafana/xk6) release [${{ steps.build.outputs.tag }}](https://github.com/grafana/xk6/releases/${{ steps.build.outputs.tag }})
