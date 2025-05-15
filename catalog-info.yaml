@@ -1,0 +1,14 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: gh-xk6
+  title: gh-xk6
+  description: |
+    GitHub CLI extension for xk6 subcommand
+  annotations:
+    backstage.io/techdocs-ref: dir:.
+    github.com/project-slug: grafana/gh-xk6
+spec:
+  type: library
+  owner: group:default/k6-extensions
+  lifecycle: production
