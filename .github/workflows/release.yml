@@ -25,7 +25,7 @@ jobs:
           persist-credentials: false
 
       - name: Setup Go ${{ vars.GO_VERSION }}
-        uses: actions/setup-go@v5
+        uses: actions/setup-go@4dc6199c7b1a012772edbd06daecab0f50c9053c # v6
         with:
           go-version: ${{ vars.GO_VERSION }}
           cache: false
